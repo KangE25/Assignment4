@@ -30,6 +30,15 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => { //part2
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self'; style-src 'self'; " +
+    "img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+  );
+  next();
+});
+
 // ---- Tiny in-memory session store -----------------------------------------
 // sessions: sid -> { userId, username }
 const sessions = new Map();
