@@ -73,15 +73,16 @@ app.get('/search', (req, res) => {
   // ============================ VULN [V1] SQL Injection =====================
   // The search term is concatenated straight into the SQL string. A crafted
   // `q` can break out of the string literal and UNION in data from other
-  // tables (the query returns 3 columns: id, title, price).
-  const sql = `SELECT id, title, price FROM items WHERE title LIKE '%${q}%'`;
+  // tables (the query returns 3 columns: id, title, price).;
   // =========================================================================
 
   let rows = [];
   try {
-    rows = db.prepare(sql).all();
+  rows = db
+    .prepare('SELECT id, title, price FROM items WHERE title LIKE ?')
+    .all('%' + q + '%');
   } catch (e) {
-    rows = [];
+  rows = [];
   }
   res.send(V.renderSearch({ session: req.session, q, rows }));
 });
@@ -97,12 +98,13 @@ app.post('/login', (req, res) => {
   // ============================ VULN [V1] SQL Injection =====================
   // Both values are concatenated into the query, so an attacker can comment
   // out the password check or force the WHERE clause to always be true.
-  const sql = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
   // =========================================================================
 
   let user = null;
   try {
-    user = db.prepare(sql).get();
+    user = db
+      .prepare('SELECT * FROM users WHERE username = ? AND password = ?')
+      .get(username, password);
   } catch (e) {
     user = null;
   }
