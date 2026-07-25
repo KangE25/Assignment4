@@ -1,0 +1,18 @@
+V1 - SQL Injection
+Vulnerability:
+The login and search pages were vulnerable to SQL injection because they put user input directly into SQL queries. An attacker could bypass the login or view information from the users table.
+Fix:
+I replaced the SQL queries with parameterized queries using `?` placeholders. This treats user input as data instead of SQL commands, preventing SQL injection.
+
+
+V2 - Stored XSS
+Vulnerability:
+The comment section displayed user comments without escaping them. An attacker could post JavaScript that would run when another user viewed the page.
+Fix:
+I used the `esc()` function to escape comments before displaying them. I also added a Content Security Policy (CSP) and set the session cookie to `HttpOnly` so JavaScript cannot read it.
+
+V3 - CSRF
+Vulnerability:
+The wallet transfer page accepted requests without checking whether they came from the real website. An attacker could trick a logged-in user into sending credits.
+Fix:
+I added a CSRF token to the transfer form and checked it on the server before processing the transfer. I also set the session cookie to `SameSite=Strict` to help block cross-site requests.
