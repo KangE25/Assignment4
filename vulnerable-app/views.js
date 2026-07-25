@@ -89,7 +89,7 @@ function renderItem({ session, item, comments, flash }) {
     <li class="comment">
       <span class="author">${esc(c.author)}</span>
       <span class="when">${esc(c.created)}</span>
-      <div class="cbody">${c.body}</div>
+      <div class="cbody">${esc(c.body)}</div>
     </li>`).join('');
 
   const commentForm = session
