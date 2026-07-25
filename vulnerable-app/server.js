@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
     FROM items JOIN users ON users.id = items.seller_id
     ORDER BY items.id DESC
   `).all();
-  res.send(V.renderHome({ session: req.session, items, flash: req.query.msg }));
+  res.send(V.renderHome({ session: req.session, items, flash: req.query.msg, csrf: req.session.csrf }));
 });
 
 // ---- Search ----------------------------------------------------------------
