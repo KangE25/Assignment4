@@ -50,7 +50,10 @@ function startSession(res, user) {
   // VULN [V2]/[V3]: the session cookie is missing HttpOnly, SameSite and Secure.
   //   - No HttpOnly  => document.cookie is readable by injected JS (helps XSS).
   //   - No SameSite  => the cookie rides along on cross-site requests (helps CSRF).
-  res.cookie('sid', sid, { path: '/' });
+  res.cookie('sid', sid, {
+    path: '/',
+    httpOnly: true
+  });
 }
 
 app.use((req, res, next) => {
