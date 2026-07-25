@@ -202,6 +202,20 @@ app.post('/wallet/transfer', (req, res) => {
   const me = currentUser(req);
   if (!me) return res.redirect('/login');
 
+  const submittedToken = req.body._csrf; //part 3
+  const sessionToken = req.session.csrf;
+  const validCsrf =
+    typeof submittedToken === 'string' &&
+    typeof sessionToken === 'string' &&
+    submittedToken.length === sessionToken.length &&
+    crypto.timingSafeEqual(
+      Buffer.from(submittedToken),
+      Buffer.from(sessionToken)
+    );
+  if (!validCsrf) {
+    return res.status(403).send('CSRF token missing or invalid');
+  }
+
   // ============================ VULN [V3] CSRF =============================
   // This state-changing action is authenticated purely by the session cookie.
   // There is NO anti-CSRF token and the cookie is not SameSite, so any page
