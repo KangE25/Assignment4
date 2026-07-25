@@ -45,7 +45,12 @@ const sessions = new Map();
 
 function startSession(res, user) {
   const sid = crypto.randomBytes(24).toString('hex');
-  sessions.set(sid, { userId: user.id, username: user.username });
+  
+  sessions.set(sid, {
+    userId: user.id,
+    username: user.username,
+    csrf: crypto.randomBytes(32).toString('hex')
+  });
 
   // VULN [V2]/[V3]: the session cookie is missing HttpOnly, SameSite and Secure.
   //   - No HttpOnly  => document.cookie is readable by injected JS (helps XSS).
